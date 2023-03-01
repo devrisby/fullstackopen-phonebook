@@ -3,7 +3,7 @@ interface PropTypes {
     setSearch: React.Dispatch<React.SetStateAction<string>>
 }
 
-const Search = ({search, setSearch}: PropTypes) => {
+const PersonSearchComponent = ({search, setSearch}: PropTypes) => {
     const handleSearchOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(event.target.value)
     }
@@ -20,4 +20,4 @@ const Search = ({search, setSearch}: PropTypes) => {
     )
 }
 
-export default Search
+export default PersonSearchComponent

@@ -1,9 +1,8 @@
 import { useState, useEffect, useReducer } from 'react'
 import Form from './components/Form'
 import Header from './components/Header'
-import Search from './components/Search'
 import Notification from './components/Notification'
-import { PersonType, PersonReducer, PersonActions, PersonService, PeopleComponent } from './module/person'
+import { PersonType, PersonReducer, PersonActions, PersonService, PeopleComponent, PersonSearchComponent } from './module/person'
 import './App.css'
 
 const personInitial = {
@@ -38,7 +37,7 @@ function App() {
     <div className="app">
       <Header title='Phonebook' />
       <Notification message={notification} error={error} />
-      <Search search={search} setSearch={setSearch} />
+      <PersonSearchComponent search={search} setSearch={setSearch} />
       <Header title='Add Contact' />
       <Form state={state} dispatch={dispatch} setNotification={setNotificationMessage} />
       <Header title='Numbers' />

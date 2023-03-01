@@ -1,6 +1,7 @@
 // Components
 import PeopleComponent from './component/PeopleComponent'
 import PersonComponent from './component/PersonComponent'
+import PersonSearchComponent from './component/PersonSearchComponent'
 
 // Models
 import type PersonDtoType from './model/PersonDtoType'
@@ -18,6 +19,7 @@ import PersonService from './PersonService'
 export {
   PeopleComponent,
   PersonComponent,
+  PersonSearchComponent,
   PersonActions,
   PersonReducer,
   PersonService,

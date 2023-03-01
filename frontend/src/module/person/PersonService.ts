@@ -16,6 +16,7 @@ const getAll = async () => {
     }
   }
 }
+
 const find = async (id: number) => {
   try {
     return await axios.get(`${baseURL}/${id}`)

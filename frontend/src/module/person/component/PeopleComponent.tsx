@@ -10,7 +10,7 @@ interface PropTypes {
 }
 
 const PeopleComponent = ({search, state, dispatch, setNotification}: PropTypes) => {
-    const filteredPersons = state.persons.filter(p => p.name.includes(search))
+    const filteredPersons = state.persons.filter(p => p.name.toLowerCase().includes(search.toLowerCase()))
 
     if(filteredPersons){
         return (
