@@ -1,6 +1,7 @@
 # custom
 build
 dist*
+!dist_client
 
 # Logs
 logs
