@@ -15,7 +15,9 @@
     "format": "prettier --ignore-path .prettierignore --check 'src/**/*.ts' 'test/**/*.ts'",
     "lint-staged": "lint-staged",
     "seed:dev": "cross-env NODE_ENV=dev node build/scripts/seed.js",
-    "seed:prod": "node build/scripts/seed.js"
+    "seed:prod": "node build/scripts/seed.js",
+    "tsc": "tsc",
+    "postinstall": "npm run tsc"
   },
   "lint-staged": {
     "*.ts": [
