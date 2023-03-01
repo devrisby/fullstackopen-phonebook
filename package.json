@@ -4,7 +4,7 @@
   "description": "fullstackopen part 3 exercise and more",
   "main": "src/index.ts",
   "scripts": {
-    "heroku-prebuild": "cd ./frontend && npm ci",
+    "heroku-prebuild": "cd ./frontend && npm i",
     "start": "npm run build && node build/index.js",
     "start:dev": "cross-env NODE_ENV=dev concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:frontend": "cd ./frontend && npm run dev",
