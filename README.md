@@ -6,6 +6,14 @@ It also will also be updated to incorporate lessons/concepts covered in the late
 
 ## Notes
 
+### How to run
+
+1. `npm i` then `cd frontend/` and `npm i`
+2. Create `.env` based on `sample.env`
+3. `docker compose up -d` to run local mongodb database
+4. `npm run build:backend` then `npm run seed:dev` to populate database with dummy data
+5. `npm run start:dev` then go to `http://localhost:3000/` for frontend and `http://localhost:3001/api/persons` for backend
+
 ### Setting up the project
 
 1. `npm init --yes`
@@ -115,7 +123,10 @@ export default defineConfig({
     "build:frontend": "cd ./frontend && npm run build && cp -Tr dist ../dist_client && rm -rf dist",
     "lint": "eslint --ignore-path .eslintignore --ext .ts .",
     "format": "prettier --ignore-path .prettierignore --check 'src/**/*.ts' 'test/**/*.ts'",
-    "lint-staged": "lint-staged"
+    "lint-staged": "lint-staged",
+    "seed:dev": "cross-env NODE_ENV=dev node build/scripts/seed.js",
+    "seed:prod": "cross-env NODE_ENV=prod node build/scripts/seed.js"
   }
 ```
 4. In project root, add to `tsconfig.json`: `"exclude": ["node_modules", "frontend"]`
+5. In project root, modify `.eslintrc.json`'s `parserOptions`: `"project": ["./tsconfig.json", "./frontend/tsconfig.json"]`
