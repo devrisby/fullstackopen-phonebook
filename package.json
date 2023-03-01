@@ -5,8 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "heroku-prebuild": "cd ./frontend && npm ci",
-    "start": "npm run build && cross-env NODE_ENV=prod node build/index.js",
-    "start:dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start": "npm run build && node build/index.js",
+    "start:dev": "cross-env NODE_ENV=dev concurrently \"npm run start:backend\" \"npm run start:frontend\"",
     "start:frontend": "cd ./frontend && npm run dev",
     "start:backend": "cross-env NODE_ENV=dev ts-node-dev --respawn src/index.ts",
     "build": "npm-run-all build:backend build:frontend",
@@ -16,7 +16,7 @@
     "format": "prettier --ignore-path .prettierignore --check 'src/**/*.ts' 'test/**/*.ts'",
     "lint-staged": "lint-staged",
     "seed:dev": "cross-env NODE_ENV=dev node build/scripts/seed.js",
-    "seed:prod": "cross-env NODE_ENV=prod node build/scripts/seed.js"
+    "seed:prod": "node build/scripts/seed.js"
   },
   "lint-staged": {
     "*.ts": [

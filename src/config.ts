@@ -2,10 +2,10 @@ import dotenv from 'dotenv'
 
 dotenv.config()
 
-const PORT = process.env.PORT ?? '3001'
+const PORT = process.env.PORT ?? '5000'
 const MONGO_URI =
-  process.env.NODE_ENV === 'prod'
-    ? process.env.MONGO_URI
-    : process.env.LOCAL_MONGO_URI
+  process.env.NODE_ENV === 'dev'
+    ? process.env.LOCAL_MONGO_URI
+    : process.env.MONGO_URI
 
 export { PORT, MONGO_URI }
