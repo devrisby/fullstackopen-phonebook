@@ -53,7 +53,7 @@ router.post('/', async (req, res) => {
 
   phoneNumberValidator(req.body.phone)
 
-  if ((await PersonModel.findOne({ name: req.body.name })) == null) {
+  if ((await PersonModel.findOne({ name: req.body.name })) != null) {
     throw new ApiError(409, 'Already exists in phonebook!')
   }
 

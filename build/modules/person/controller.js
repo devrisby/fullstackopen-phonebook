@@ -50,7 +50,7 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         throw new error_1.default(400, 'Name must be atleast 3 characters long');
     }
     phoneNumberValidator(req.body.phone);
-    if ((yield schema_1.default.findOne({ name: req.body.name })) == null) {
+    if ((yield schema_1.default.findOne({ name: req.body.name })) != null) {
         throw new error_1.default(409, 'Already exists in phonebook!');
     }
     const personDTO = new schema_1.default({
