@@ -12,24 +12,6 @@ It also will also be updated to incorporate lessons/concepts covered in the late
 2. `npm install --save-dev typescript @types/node @types/express @tsconfig/recommended ts-node-dev rimraf eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin prettier eslint-config-prettier husky lint-staged`
 3. `npx tsc --init --rootDir src --outDir build`
 4. `tsconfig.json`:
-```json
-{
-  "compilerOptions": {
-    "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    /* Modules */
-    "module": "commonjs",                                /* Specify what module code is generated. */
-    "rootDir": "src",                                    /* Specify the root folder within your source files. */
-    "outDir": "build",                                   /* Specify an output folder for all emitted files. */
-    "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-    /* Type Checking */
-    "strict": true,                                      /* Enable all strict type-checking options. */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  },
-  "extends": "@tsconfig/recommended/tsconfig.json"
-}
-
-```
 5. `touch src/index.ts`
 6. `npx eslint --init`
 7. `.eslintrc.json`:
@@ -74,7 +56,7 @@ It also will also be updated to incorporate lessons/concepts covered in the late
 11. `npm set-script prepare "husky install"`
 12. `npm run prepare`
 13. `npx husky add .husky/pre-commit "npm run lint-staged"`
-14. `npm i express dotenv cross-env`
+14. `npm i express dotenv cross-env mongoose concurrently npm-run-all morgan cors`
 15. `package.json` scripts & lint-staged objects:
 
 ```json
@@ -95,3 +77,45 @@ It also will also be updated to incorporate lessons/concepts covered in the late
     ]
   },
 ```
+
+### Production Build
+
+1. In frontend, edit `vite.config.ts`:
+
+```ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    port: 3000,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001', // connect to backend during development
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  }
+})
+```
+
+2. In frontend, edit axios base url: `const baseURL = "/api/persons"`
+3. In project root, modify `package.json` scripts: 
+```json
+"scripts": {
+    "start:prod": "npm run build && cross-env NODE_ENV=prod node build/index.js",
+    "start:dev": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:frontend": "cd ./frontend && npm run dev",
+    "start:backend": "cross-env NODE_ENV=dev ts-node-dev --respawn src/index.ts",
+    "build": "npm-run-all build:backend build:frontend",
+    "build:backend": "rimraf ./build && tsc",
+    "build:frontend": "cd ./frontend && npm run build && cp -Tr dist ../dist_client && rm -rf dist",
+    "lint": "eslint --ignore-path .eslintignore --ext .ts .",
+    "format": "prettier --ignore-path .prettierignore --check 'src/**/*.ts' 'test/**/*.ts'",
+    "lint-staged": "lint-staged"
+  }
+```
+4. In project root, add to `tsconfig.json`: `"exclude": ["node_modules", "frontend"]`

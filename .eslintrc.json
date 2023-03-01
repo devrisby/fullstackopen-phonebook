@@ -9,9 +9,20 @@
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module",
-        "project": ["./tsconfig.json"]
+        "project": ["./tsconfig.json", "./frontend/tsconfig.json"]
     },
     "rules": {
-        "@typescript-eslint/explicit-function-return-type": 1
+        "@typescript-eslint/no-confusing-void-expression": 1,
+        "@typescript-eslint/consistent-type-definitions": 1,
+        "@typescript-eslint/prefer-ts-expect-error": 0,
+        "@typescript-eslint/ban-ts-comment": 0,
+        "@typescript-eslint/no-non-null-assertion": 0,
+        "@typescript-eslint/explicit-function-return-type": 1,
+        "@typescript-eslint/no-misused-promises": [
+            "error",
+            {
+              "checksVoidReturn": false
+            }
+        ]
     }
 }

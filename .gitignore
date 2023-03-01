@@ -1,5 +1,6 @@
 # custom
 build
+dist*
 
 # Logs
 logs
