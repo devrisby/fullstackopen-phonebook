@@ -1,5 +1,4 @@
 # custom
-build
 dist*
 !dist_client
 
