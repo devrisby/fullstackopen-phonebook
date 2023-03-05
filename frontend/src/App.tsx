@@ -1,5 +1,5 @@
 import { useState, useEffect, useReducer } from 'react'
-import Form from './components/Form'
+import AddPersonComponent from './module/person/component/AddPersonComponent'
 import Header from './components/Header'
 import Notification from './components/Notification'
 import { PersonType, PersonReducer, PersonActions, PersonService, PeopleComponent, PersonSearchComponent } from './module/person'
@@ -39,7 +39,7 @@ function App() {
       <Notification message={notification} error={error} />
       <PersonSearchComponent search={search} setSearch={setSearch} />
       <Header title='Add Contact' />
-      <Form state={state} dispatch={dispatch} setNotification={setNotificationMessage} />
+      <AddPersonComponent state={state} dispatch={dispatch} setNotification={setNotificationMessage} />
       <Header title='Numbers' />
       <PeopleComponent search={search} state={state} dispatch={dispatch} setNotification={setNotificationMessage}  />
     </div>

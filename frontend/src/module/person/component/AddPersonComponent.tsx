@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "./Button";
-import {PersonStateType, PersonActionType, PersonActions, PersonService, PersonType } from "../module/person"
+import Button from "../../../components/Button";
+import {PersonStateType, PersonActionType, PersonActions, PersonService, PersonType } from ".."
 
 interface PropTypes {
     state: PersonStateType;
@@ -8,7 +8,7 @@ interface PropTypes {
     setNotification: (message: string, error: boolean) => void
 }
 
-const Form = ({state, dispatch, setNotification}: PropTypes) => {
+const AddPersonComponent = ({state, dispatch, setNotification}: PropTypes) => {
     const handleNameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => dispatch({type: PersonActions.SETNEWNAME, payload: event.target.value })
     const handlePhoneOnChange = (event: React.ChangeEvent<HTMLInputElement>) => dispatch({type: PersonActions.SETNEWPHONE, payload: event.target.value})
 
@@ -92,4 +92,4 @@ const Form = ({state, dispatch, setNotification}: PropTypes) => {
   )
 }
 
-export default Form;
+export default AddPersonComponent;
