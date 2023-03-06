@@ -1,23 +1,20 @@
 import Button from "../../../components/Button";
 import PersonType from "../model/PersonType";
 import PersonService from "../PersonService";
-import PersonActions from "../reducer/PersonActions";
-import { PersonActionType } from "../reducer/PersonActionType";
-import { PersonStateType } from "../reducer/PersonStateType";
 
 interface PropTypes {
     person: PersonType;
-    state: PersonStateType;
-    dispatch: React.Dispatch<PersonActionType>;
+    persons: PersonType[],
+    setPersons: React.Dispatch<React.SetStateAction<PersonType[]>>,
     setNotification: (message: string, error: boolean) => void
 }
 
-const PersonComponent = ({person, state, dispatch, setNotification}: PropTypes ) => {
+const PersonComponent = ({person, persons, setPersons, setNotification}: PropTypes ) => {
     const handleDeleteOnClick = async (person: PersonType) => {
         if(confirm(`Delete ${person.name}?`)){
             try {
                 await PersonService.remove(person.id);
-                dispatch({type: PersonActions.SETPERSONS, payload: state.persons.filter(p => p.id != person.id)})
+                setPersons(persons.filter(p => p.id != person.id))
 
             } catch (e) {
                 console.log("Error", e)

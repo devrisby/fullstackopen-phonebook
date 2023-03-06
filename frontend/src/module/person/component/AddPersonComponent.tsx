@@ -1,94 +1,105 @@
-import React from "react";
+import React, { useRef } from "react";
 import Button from "../../../components/Button";
-import {PersonStateType, PersonActionType, PersonActions, PersonService, PersonType } from ".."
+import PersonType from "../model/PersonType";
+import PersonService from "../PersonService";
 
 interface PropTypes {
-    state: PersonStateType;
-    dispatch: React.Dispatch<PersonActionType>;
-    setNotification: (message: string, error: boolean) => void
+  persons: PersonType[],
+  setPersons: React.Dispatch<React.SetStateAction<PersonType[]>>,
+  setNotification: (message: string, error: boolean) => void
 }
 
-const AddPersonComponent = ({state, dispatch, setNotification}: PropTypes) => {
-    const handleNameOnChange = (event: React.ChangeEvent<HTMLInputElement>) => dispatch({type: PersonActions.SETNEWNAME, payload: event.target.value })
-    const handlePhoneOnChange = (event: React.ChangeEvent<HTMLInputElement>) => dispatch({type: PersonActions.SETNEWPHONE, payload: event.target.value})
+const AddPersonComponent = ({persons, setPersons, setNotification}: PropTypes) => {
 
-    const handlePersonOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault()
+  const nameRef = useRef<HTMLInputElement>(null)
+  const phoneRef = useRef<HTMLInputElement>(null)
 
-      try {
-        if(!(state.newName && state.newPhone)) 
+  const handlePersonOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+
+    const originalPersons = [...persons].map(p => ({...p}))
+    
+    try {
+      if(nameRef.current && phoneRef.current) {
+        if(!(nameRef.current.value && phoneRef.current.value)) 
           setNotification(`Please fill out name and number!`, true)
-        else if(checkIfPersonAlreadyExists()) 
-          await handleExistingPerson(findExistingPerson()) 
+        else if(checkIfPersonAlreadyExists(nameRef.current.value)) 
+          await handleExistingPerson(nameRef.current.value, phoneRef.current.value) 
         else
-          await createPerson()
-      } catch(e) {
+          await createPerson(nameRef.current.value, phoneRef.current.value)
+      } 
+    } catch(e) {
+      // @ts-ignore
+      if(e.cause === 'ApiError') {
         // @ts-ignore
-        if(e.cause === 'ApiError') {
-          // @ts-ignore
-          setNotification(e.message, true)
-        } else {
-          setNotification('Server error! Please try again', true)
-          console.log(e)
-        }
-      }
-    }
-
-    // handlePersonOnSubmit helpers
-    const checkIfPersonAlreadyExists = () => state.persons.some(p => p.name === state.newName)
-    const findExistingPerson = () => (state.persons.find(p => p.name === state.newName))!
-
-    const handleExistingPerson = async (person: PersonType) => {
-      const phoneIsDifferent = person.phone !== state.newPhone
-      const promptPhoneUpdate = confirm(`${person?.name} is already added to phonebook. Replace old number with new one?`)
-
-      if(phoneIsDifferent && promptPhoneUpdate) {
-        await editPhone(person)
+        setNotification(e.message, true)
+        setPersons(originalPersons)
       } else {
-        setNotification(`${state.newName} is already added to phonebook`, true)
+        setNotification('Server error! Please try again', true)
+        setPersons(originalPersons)
       }
     }
+  }
 
-    const editPhone = async (matchedPerson: PersonType) => {
-      matchedPerson.phone = state.newPhone
-      const updatedPersons = state.persons.map(p => p.id !== matchedPerson.id ? p: matchedPerson)
-      dispatch({type: PersonActions.SETPERSONS, payload: updatedPersons})
-      await PersonService.update(matchedPerson.id, matchedPerson);
-    }
 
-    const createPerson = async () => {
-      const newPersonDTO = {
-        name: state.newName,
-        phone: state.newPhone
+  // handlePersonOnSubmit helpers
+  const checkIfPersonAlreadyExists = (newName: string) => persons.some(p => p.name === newName)
+
+  const handleExistingPerson = async (newName: string, newPhone: string) => {
+    const person: PersonType = persons.find(p => p.name === newName)!
+
+    // booleans
+    const phoneIsDifferent = person.phone !== newPhone
+    const updatePhonePrompt = confirm(`${person?.name} is already added to phonebook. Replace old number with new one?`)
+
+    if(updatePhonePrompt) {
+      if(phoneIsDifferent) {
+        await editPhone(person, newPhone)
+      } else {
+        setNotification(`${person?.name} is already added to phonebook`, true)
       }
+    }
+  }
 
-      const response = await PersonService.create(newPersonDTO);
+  // update phone number of person
+  const editPhone = async (matchedPerson: PersonType, newPhone: string) => {
+    matchedPerson.phone = newPhone
+    const updatedPersons = persons.map(p => p.id !== matchedPerson.id ? p: matchedPerson)
+    await PersonService.update(matchedPerson.id, matchedPerson);
+    setPersons(updatedPersons)    
+  }
 
-      dispatch({type: PersonActions.SETPERSONS, payload: state.persons.concat(response.data)})
-      dispatch({type: PersonActions.SETNEWNAME, payload: ''})
-      dispatch({type: PersonActions.SETNEWPHONE, payload: ''})
+  const createPerson = async (newName: string, newPhone: string) => {
+    const newPersonDTO = {
+      name: newName,
+      phone: newPhone
     }
 
-    return (
-      <form className="add_contact" onSubmit={handlePersonOnSubmit}>
-          <label>
-              <div>
-                  <p>name:</p>
-              </div>
-              <div>
-                  <input type="text" value={state.newName} onChange={handleNameOnChange} />
-              </div>
-          </label>
-          <label>
-              <div>
-                  <p>number:</p>
-              </div>
-              <div>
-                  <input type="text" value={state.newPhone} onChange={handlePhoneOnChange} />
-              </div>
-          </label>
-          <Button label="add" type="submit"/>
-      </form>
+    const response = await PersonService.create(newPersonDTO);
+
+    setPersons(persons.concat(response.data))
+  }
+
+  return (
+    <form className="add_contact" onSubmit={handlePersonOnSubmit}>
+        <label>
+            <div>
+                <p>name:</p>
+            </div>
+            <div>
+                <input type="text" ref={nameRef} />
+            </div>
+        </label>
+        <label>
+            <div>
+                <p>number:</p>
+            </div>
+            <div>
+                <input type="text" ref={phoneRef} />
+            </div>
+        </label>
+        <Button label="add" type="submit"/>
+    </form>
   )
 }
 
