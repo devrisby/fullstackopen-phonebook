@@ -1,4 +1,4 @@
-import { modelFactory } from '../../data/mongo'
+import { modelFactory } from '../../data/utils'
 
 const personSchema = {
   name: {

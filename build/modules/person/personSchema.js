@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const mongo_1 = require("../../data/mongo");
+const utils_1 = require("../../data/utils");
 const personSchema = {
     name: {
         type: String,
@@ -11,5 +11,5 @@ const personSchema = {
         required: true,
     },
 };
-const PersonModel = (0, mongo_1.modelFactory)('Person', personSchema);
+const PersonModel = (0, utils_1.modelFactory)('Person', personSchema);
 exports.default = PersonModel;

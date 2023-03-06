@@ -6,11 +6,11 @@
   "scripts": {
     "start": "node build/index.js",
     "start:dev": "cross-env NODE_ENV=dev concurrently \"npm run start:backend\" \"npm run start:frontend\"",
-    "start:frontend": "cd ./frontend && npm run dev",
+    "start:frontend": "cd ./client && npm run dev",
     "start:backend": "cross-env NODE_ENV=dev ts-node-dev --respawn src/index.ts",
     "build:both": "npm-run-all build:backend build:frontend",
     "build:backend": "rimraf ./build && tsc",
-    "build:frontend": "cd ./frontend && npm run build && cp -Tr dist ../dist_client && rm -rf dist",
+    "build:frontend": "cd ./client && npm run build && cp -Tr dist ../build_client && rm -rf dist",
     "lint": "eslint --ignore-path .eslintignore --ext .ts .",
     "format": "prettier --ignore-path .prettierignore --check 'src/**/*.ts' 'test/**/*.ts'",
     "lint-staged": "lint-staged",
