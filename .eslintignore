@@ -1,4 +1,4 @@
 node_modules
 build
 vite-env.d.ts
-dist_client
+build_client

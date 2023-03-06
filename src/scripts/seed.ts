@@ -1,6 +1,6 @@
 import * as config from '../config'
 import { startMongo, stopMongo } from '../data/mongo'
-import PersonModel from '../modules/person/schema'
+import PersonModel from '../modules/person/personSchema'
 
 const persons = [
   {

@@ -1,6 +1,6 @@
 import express from 'express'
 import { objectIdValidator } from '../../data/utils'
-import PersonModel from './schema'
+import PersonModel from './personSchema'
 import ApiError from '../../http/error'
 
 const router = express.Router()

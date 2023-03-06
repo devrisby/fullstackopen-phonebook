@@ -13,8 +13,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const mongo_1 = require("../../data/mongo");
-const schema_1 = __importDefault(require("./schema"));
+const utils_1 = require("../../data/utils");
+const personSchema_1 = __importDefault(require("./personSchema"));
 const error_1 = __importDefault(require("../../http/error"));
 const router = express_1.default.Router();
 const phoneNumberValidator = (phone) => {
@@ -34,12 +34,12 @@ const phoneNumberValidator = (phone) => {
     }
 };
 router.get('/info', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const persons = yield schema_1.default.find({}).exec();
+    const persons = yield personSchema_1.default.find({}).exec();
     const message = `Phonebook has info for ${persons.length} people\n ${new Date().toString()}`;
     res.status(200).send(message);
 }));
 router.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const persons = yield schema_1.default.find({}).exec();
+    const persons = yield personSchema_1.default.find({}).exec();
     res.status(200).json(persons);
 }));
 router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -50,10 +50,10 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         throw new error_1.default(400, 'Name must be atleast 3 characters long');
     }
     phoneNumberValidator(req.body.phone);
-    if ((yield schema_1.default.findOne({ name: req.body.name })) != null) {
+    if ((yield personSchema_1.default.findOne({ name: req.body.name })) != null) {
         throw new error_1.default(409, 'Already exists in phonebook!');
     }
-    const personDTO = new schema_1.default({
+    const personDTO = new personSchema_1.default({
         name: req.body.name,
         phone: req.body.phone,
     });
@@ -61,10 +61,10 @@ router.post('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(201).json(newPerson);
 }));
 router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(0, mongo_1.objectIdValidator)(req.params.id)) {
+    if (!(0, utils_1.objectIdValidator)(req.params.id)) {
         throw new error_1.default(400, 'Incorrect ID format');
     }
-    const person = yield schema_1.default.findById(req.params.id).exec();
+    const person = yield personSchema_1.default.findById(req.params.id).exec();
     if (person != null) {
         res.status(200).json(person);
     }
@@ -73,7 +73,7 @@ router.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(0, mongo_1.objectIdValidator)(req.params.id)) {
+    if (!(0, utils_1.objectIdValidator)(req.params.id)) {
         throw new error_1.default(400, 'Incorrect ID format');
     }
     if (req.body.name < 3) {
@@ -84,7 +84,7 @@ router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         name: req.body.name,
         phone: req.body.phone,
     };
-    const updatedPerson = yield schema_1.default.findByIdAndUpdate(req.params.id, personDTO, { new: true });
+    const updatedPerson = yield personSchema_1.default.findByIdAndUpdate(req.params.id, personDTO, { new: true });
     if (updatedPerson != null) {
         res.status(200).json(updatedPerson);
     }
@@ -93,10 +93,10 @@ router.put('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
 }));
 router.delete('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    if (!(0, mongo_1.objectIdValidator)(req.params.id)) {
+    if (!(0, utils_1.objectIdValidator)(req.params.id)) {
         throw new error_1.default(400, 'Incorrect ID format');
     }
-    yield schema_1.default.findByIdAndDelete(req.params.id);
+    yield personSchema_1.default.findByIdAndDelete(req.params.id);
     res.status(204).end();
 }));
 exports.default = router;

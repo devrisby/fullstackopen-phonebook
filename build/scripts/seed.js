@@ -37,7 +37,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = __importStar(require("../config"));
 const mongo_1 = require("../data/mongo");
-const schema_1 = __importDefault(require("../modules/person/schema"));
+const personSchema_1 = __importDefault(require("../modules/person/personSchema"));
 const persons = [
     {
         name: 'Arto Hellas',
@@ -66,16 +66,16 @@ const persons = [
 ];
 const seed = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, mongo_1.startMongo)(config.MONGO_URI);
-    yield schema_1.default.deleteMany({});
-    yield schema_1.default.insertMany(persons);
+    yield personSchema_1.default.deleteMany({});
+    yield personSchema_1.default.insertMany(persons);
     if (process.argv[2] != null && process.argv[3] != null) {
-        const personDTO = new schema_1.default({
+        const personDTO = new personSchema_1.default({
             name: process.argv[2],
             phone: process.argv[3],
         });
         yield personDTO.save();
     }
-    const savedPersons = yield schema_1.default.find({}).exec();
+    const savedPersons = yield personSchema_1.default.find({}).exec();
     console.log('phonebook:\n');
     savedPersons.forEach(p => {
         console.log(p);

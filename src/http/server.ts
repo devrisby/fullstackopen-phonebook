@@ -8,7 +8,7 @@ const app = express()
 
 app.use(cors({ origin: 'http://localhost:3000' }))
 app.use(express.json())
-app.use(express.static('dist_client'))
+app.use(express.static('build_client'))
 app.use(httpLogger())
 app.use(router)
 app.use(errorHandler)

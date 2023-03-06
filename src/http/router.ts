@@ -1,6 +1,6 @@
 import express from 'express'
 import { mongoHealth } from '../data/mongo'
-import PersonRouter from '../modules/person/controller'
+import PersonRouter from '../modules/person/personController'
 
 const router = express.Router()
 

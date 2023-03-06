@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const mongo_1 = require("../data/mongo");
-const controller_1 = __importDefault(require("../modules/person/controller"));
+const personController_1 = __importDefault(require("../modules/person/personController"));
 const router = express_1.default.Router();
 router.get('/api/health', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const dbHealth = yield (0, mongo_1.mongoHealth)();
@@ -26,5 +26,5 @@ router.get('/api/health', (req, res) => __awaiter(void 0, void 0, void 0, functi
     };
     res.status(200).json(appHealth);
 }));
-router.use('/api/persons', controller_1.default);
+router.use('/api/persons', personController_1.default);
 exports.default = router;

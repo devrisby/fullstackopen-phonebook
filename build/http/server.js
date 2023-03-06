@@ -13,7 +13,7 @@ const app = (0, express_1.default)();
 exports.app = app;
 app.use((0, cors_1.default)({ origin: 'http://localhost:3000' }));
 app.use(express_1.default.json());
-app.use(express_1.default.static('dist_client'));
+app.use(express_1.default.static('build_client'));
 app.use((0, middleware_1.httpLogger)());
 app.use(router_1.default);
 app.use(middleware_1.errorHandler);

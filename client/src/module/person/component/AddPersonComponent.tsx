@@ -23,11 +23,14 @@ const AddPersonComponent = ({persons, setPersons, setNotification}: PropTypes) =
       if(nameRef.current && phoneRef.current) {
         if(!(nameRef.current.value && phoneRef.current.value)) 
           setNotification(`Please fill out name and number!`, true)
-        else if(checkIfPersonAlreadyExists(nameRef.current.value)) 
+        else if(personAlreadyExists(nameRef.current.value)) 
           await handleExistingPerson(nameRef.current.value, phoneRef.current.value) 
         else
-          await createPerson(nameRef.current.value, phoneRef.current.value)
-      } 
+          await addNewPerson(nameRef.current.value, phoneRef.current.value)
+        
+        nameRef.current.value = ""
+        phoneRef.current.value = ""
+      }
     } catch(e) {
       // @ts-ignore
       if(e.cause === 'ApiError') {
@@ -43,33 +46,21 @@ const AddPersonComponent = ({persons, setPersons, setNotification}: PropTypes) =
 
 
   // handlePersonOnSubmit helpers
-  const checkIfPersonAlreadyExists = (newName: string) => persons.some(p => p.name === newName)
+  const personAlreadyExists = (newName: string) => persons.some(p => p.name === newName)
 
   const handleExistingPerson = async (newName: string, newPhone: string) => {
     const person: PersonType = persons.find(p => p.name === newName)!
+    const agreeToUpdatePhone = confirm(`${person?.name} is already added to phonebook. Replace old number with new one?`)
 
-    // booleans
-    const phoneIsDifferent = person.phone !== newPhone
-    const updatePhonePrompt = confirm(`${person?.name} is already added to phonebook. Replace old number with new one?`)
-
-    if(updatePhonePrompt) {
-      if(phoneIsDifferent) {
-        await editPhone(person, newPhone)
-      } else {
-        setNotification(`${person?.name} is already added to phonebook`, true)
-      }
+    if(agreeToUpdatePhone) {
+      person.phone = newPhone
+      const updatedPersons = persons.map(p => p.id !== person.id ? p: person)
+      await PersonService.update(person.id, person);
+      setPersons(updatedPersons)   
     }
   }
 
-  // update phone number of person
-  const editPhone = async (matchedPerson: PersonType, newPhone: string) => {
-    matchedPerson.phone = newPhone
-    const updatedPersons = persons.map(p => p.id !== matchedPerson.id ? p: matchedPerson)
-    await PersonService.update(matchedPerson.id, matchedPerson);
-    setPersons(updatedPersons)    
-  }
-
-  const createPerson = async (newName: string, newPhone: string) => {
+  const addNewPerson = async (newName: string, newPhone: string) => {
     const newPersonDTO = {
       name: newName,
       phone: newPhone

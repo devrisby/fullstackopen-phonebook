@@ -100,6 +100,6 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "exclude": ["node_modules", "frontend", "dist_client"],
+  "exclude": ["node_modules", "client", "build_client"],
   "extends": "@tsconfig/recommended/tsconfig.json"
 }
