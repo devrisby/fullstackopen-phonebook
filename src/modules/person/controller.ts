@@ -1,5 +1,5 @@
 import express from 'express'
-import { objectIdValidator } from '../../data/mongo'
+import { objectIdValidator } from '../../data/utils'
 import PersonModel from './schema'
 import ApiError from '../../http/error'
 
